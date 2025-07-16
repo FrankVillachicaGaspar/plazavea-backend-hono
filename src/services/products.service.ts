@@ -1,9 +1,35 @@
 import { and, asc, eq, gt, like, lte, sql } from 'drizzle-orm'
 import { db } from '@/config/database'
-import { productos } from '@/db/schema'
-import type { ProductFilterDto } from '@/schemas/products.schema'
+import { imagenes, productos } from '@/db/schema'
+import type {
+  ProductByIdResponse,
+  ProductFilterDto,
+} from '@/schemas/products.schema'
 
 export class ProductService {
+  async getProductById(productId: number): Promise<ProductByIdResponse> {
+    const [product] = await db
+      .select({
+        id: productos.id,
+        nombre: productos.nombre,
+        descripcion: productos.descripcion,
+        precio: productos.precio,
+        stock: productos.stock,
+      })
+      .from(productos)
+      .where(eq(productos.id, productId))
+
+    const imagenesDelProducto = await db
+      .select()
+      .from(imagenes)
+      .where(eq(imagenes.productoId, productId))
+
+    return {
+      ...product,
+      imagenes: imagenesDelProducto,
+    }
+  }
+
   async getProducts(filters: ProductFilterDto) {
     const whereClause = [gt(productos.stock, 0)]
 
