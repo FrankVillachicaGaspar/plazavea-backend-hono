@@ -1,4 +1,4 @@
-import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
+import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import { BannerController } from '@/controllers/banners.controller'
 import { bannerResponseSchema } from '@/schemas/banners.schema'
 import {
@@ -22,7 +22,7 @@ const routeHandler = (path: string, summary: string, description: string) => {
         description: 'Banners obtenidos exitosamente',
         content: {
           'application/json': {
-            schema: successResponseSchema(bannerResponseSchema),
+            schema: successResponseSchema(z.array(bannerResponseSchema)),
           },
         },
       },

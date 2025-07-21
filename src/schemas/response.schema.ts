@@ -29,3 +29,14 @@ export const successResponseSchema = (dataSchema: z.ZodSchema) =>
       example: 'Operación exitosa',
     }),
   })
+
+export const successMessageResponseSchema = z.object({
+  success: z.boolean().openapi({
+    description: 'Indica si la operación fue exitosa',
+    example: true,
+  }),
+  message: z.string().openapi({
+    description: 'Mensaje de éxito',
+    example: 'Operación exitosa',
+  }),
+})

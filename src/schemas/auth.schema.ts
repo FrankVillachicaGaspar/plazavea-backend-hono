@@ -88,19 +88,14 @@ export const userResponseSchema = z
     nombre: z
       .string()
       .openapi({ description: 'Nombre del usuario', example: 'Juan' }),
-    apellidos: z
-      .string()
-      .openapi({
-        description: 'Apellidos del usuario',
-        example: 'Pérez García',
-      }),
-    email: z
-      .string()
-      .email()
-      .openapi({
-        description: 'Email del usuario',
-        example: 'juan@ejemplo.com',
-      }),
+    apellidos: z.string().openapi({
+      description: 'Apellidos del usuario',
+      example: 'Pérez García',
+    }),
+    email: z.string().email().openapi({
+      description: 'Email del usuario',
+      example: 'juan@ejemplo.com',
+    }),
     telefono: z
       .string()
       .nullable()
@@ -124,8 +119,17 @@ export const authResponseSchema = z
 
 export const loginSchema = z
   .object({
-    email: z.string().email('Email inválido'),
-    password: z.string().min(1, 'Password es requerido'),
+    email: z.string().email('Email inválido').openapi({
+      example: 'pedrito.machaway@gmail.com',
+      description: 'Email del usuario',
+    }),
+    password: z
+      .string()
+      .min(1, 'Password es requerido')
+      .openapi({
+        example: 'Pedrito123$$',
+        description: 'Password del usuario',
+      }),
   })
   .openapi('Login')
 
@@ -135,19 +139,14 @@ export const profileResponseSchema = z
     nombre: z
       .string()
       .openapi({ description: 'Nombre del usuario', example: 'Juan' }),
-    apellidos: z
-      .string()
-      .openapi({
-        description: 'Apellidos del usuario',
-        example: 'Pérez García',
-      }),
-    email: z
-      .string()
-      .email()
-      .openapi({
-        description: 'Email del usuario',
-        example: 'juan@ejemplo.com',
-      }),
+    apellidos: z.string().openapi({
+      description: 'Apellidos del usuario',
+      example: 'Pérez García',
+    }),
+    email: z.string().email().openapi({
+      description: 'Email del usuario',
+      example: 'juan@ejemplo.com',
+    }),
     telefono: z
       .string()
       .nullable()

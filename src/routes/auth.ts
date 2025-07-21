@@ -106,7 +106,7 @@ const signInRoute = createRoute({
 const profileRoute = createRoute({
   method: 'get',
   path: '/profile',
-  tags: ['Authentication'],
+  tags: tag,
   summary: 'Obtener perfil del usuario',
   description: 'Obtiene el perfil del usuario autenticado',
   middleware: [authenticateJWT] as const,
@@ -151,7 +151,6 @@ const profileRoute = createRoute({
   },
 })
 
-// Rutas públicas
 auth.openapi(signUpRoute, authController.signup)
 auth.openapi(signInRoute, authController.signin)
 auth.openapi(profileRoute, authController.profile)

@@ -7,6 +7,8 @@ import { prettyJSON } from 'hono/pretty-json'
 // Routes
 import authRoutes from '@/routes/auth'
 import bannerRoutes from '@/routes/banners'
+import cartRoutes from '@/routes/cart'
+import categoryRoutes from '@/routes/categories'
 import productRoutes from '@/routes/products'
 
 const app = new OpenAPIHono()
@@ -51,9 +53,9 @@ app.get('/ui', swaggerUI({ url: '/doc' }))
 app.route('/api/auth', authRoutes)
 app.route('/api/banners', bannerRoutes)
 app.route('/api/products', productRoutes)
+app.route('/api/categories', categoryRoutes)
+app.route('/api/cart', cartRoutes)
 //app.route('/api/users', userRoutes)
-//app.route('/api/categories', categoryRoutes)
-//app.route('/api/cart', cartRoutes)
 //app.route('/api/payments', paymentRoutes)
 
 // Health check

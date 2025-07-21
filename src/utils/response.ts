@@ -1,4 +1,8 @@
 export const createResponse = {
+  successMessage: (message?: string) => ({
+    success: true,
+    message: message || 'Operación exitosa',
+  }),
   success: <T>(data: T, message?: string) => ({
     success: true,
     data,
