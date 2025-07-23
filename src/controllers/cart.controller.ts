@@ -2,6 +2,7 @@ import type { RouteHandler } from '@hono/zod-openapi'
 import type {
   addCartItem,
   getCartByUserId,
+  getCount,
   removeCartItem,
 } from '@/routes/cart'
 import { CartService } from '@/services/cart.service'
@@ -75,6 +76,19 @@ export class CartController {
         return c.json(createResponse.error(error.message), 400)
       }
       return c.json(createResponse.error('Something went wrong'), 400)
+    }
+  }
+
+  getCount: RouteHandler<typeof getCount> = async c => {
+    try {
+      const user = c.get('user') as { userId: number }
+      const count = await this.cartService.count(user.userId)
+      return c.json(createResponse.success(count), 200)
+    } catch (error) {
+      if (error instanceof Error) {
+        return c.json(createResponse.error(error.message), 400)
+      }
+      return c.json(createResponse.error('Something went wrong'), 500)
     }
   }
 }

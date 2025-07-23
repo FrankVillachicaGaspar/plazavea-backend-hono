@@ -67,4 +67,8 @@ export class CartService {
       .delete(carrito)
       .where(and(eq(carrito.usuarioId, id), eq(carrito.productoId, productId)))
   }
+
+  async count(idUsuario: number) {
+    return await db.$count(carrito, eq(carrito.usuarioId, idUsuario))
+  }
 }

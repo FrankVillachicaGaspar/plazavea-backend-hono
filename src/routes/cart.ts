@@ -181,9 +181,54 @@ export const removeCartItem = createRoute({
   },
 })
 
+export const getCount = createRoute({
+  method: 'get',
+  path: '/count',
+  tags: tag,
+  summary: 'Obtener cantidad de productos del carrito',
+  description: 'Obtiene la cantidad de productos del carrito',
+  middleware: [authenticateJWT] as const,
+  security: [
+    {
+      Bearer: [],
+    },
+  ],
+  responses: {
+    200: {
+      description: 'Cantidad de productos obtenida exitosamente',
+      content: {
+        'application/json': {
+          schema: successResponseSchema(
+            z.object({
+              count: z.number(),
+            }),
+          ),
+        },
+      },
+    },
+    400: {
+      description: 'Bad request',
+      content: {
+        'application/json': {
+          schema: errorResponseSchema,
+        },
+      },
+    },
+    500: {
+      description: 'Internal server error',
+      content: {
+        'application/json': {
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
+})
+
 carts.openapi(getCartByUserId, cartController.getCartByUserId)
 carts.openapi(addCartItem, cartController.addCartItem)
 carts.openapi(decreaseCartItem, cartController.decreaseCartItem)
 carts.openapi(removeCartItem, cartController.removeCartItem)
+carts.openapi(getCount, cartController.getCount)
 
 export default carts
