@@ -123,13 +123,10 @@ export const loginSchema = z
       example: 'pedrito.machaway@gmail.com',
       description: 'Email del usuario',
     }),
-    password: z
-      .string()
-      .min(1, 'Password es requerido')
-      .openapi({
-        example: 'Pedrito123$$',
-        description: 'Password del usuario',
-      }),
+    password: z.string().min(1, 'Password es requerido').openapi({
+      example: 'Pedrito123$$',
+      description: 'Password del usuario',
+    }),
   })
   .openapi('Login')
 

@@ -13,7 +13,7 @@ import {
 
 const product = new OpenAPIHono()
 const productController = new ProductController()
-const tag = ['Products']
+const tag = ['Productos']
 
 export const getProducts = createRoute({
   method: 'get',

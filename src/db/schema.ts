@@ -137,6 +137,9 @@ export const pagos = sqliteTable('pagos', {
   referencia: text('referencia'), // opcional: ID externo de transacción
 })
 
+export type PagoInsert = typeof pagos.$inferInsert
+export type PagoSelect = typeof pagos.$inferSelect
+
 // Detalle de productos comprados en cada pago
 export const pagosDetalle = sqliteTable(
   'pagos_detalle',
@@ -152,3 +155,5 @@ export const pagosDetalle = sqliteTable(
     foreignKey({ columns: [t.productoId], foreignColumns: [productos.id] }),
   ],
 )
+
+export type PagoDetalleInsert = typeof pagosDetalle.$inferInsert

@@ -10,6 +10,7 @@ import bannerRoutes from '@/routes/banners'
 import cartRoutes from '@/routes/cart'
 import categoryRoutes from '@/routes/categories'
 import productRoutes from '@/routes/products'
+import paymentRoutes from '@/routes/payments'
 
 const app = new OpenAPIHono()
 
@@ -55,8 +56,8 @@ app.route('/api/banners', bannerRoutes)
 app.route('/api/products', productRoutes)
 app.route('/api/categories', categoryRoutes)
 app.route('/api/cart', cartRoutes)
+app.route('/api/payments', paymentRoutes)
 //app.route('/api/users', userRoutes)
-//app.route('/api/payments', paymentRoutes)
 
 // Health check
 app.get('/health', c =>
