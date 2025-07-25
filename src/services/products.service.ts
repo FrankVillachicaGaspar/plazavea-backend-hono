@@ -1,11 +1,6 @@
 import { and, asc, eq, gt, like, lte, sql } from 'drizzle-orm'
 import { db } from '@/config/database'
-import {
-  carrito,
-  imagenes,
-  productos,
-  productosRecomendados,
-} from '@/db/schema'
+import { imagenes, productos, productosRecomendados } from '@/db/schema'
 import type {
   ProductByIdResponse,
   ProductFilterDto,
