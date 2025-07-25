@@ -1,9 +1,10 @@
-import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
+import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import { ProductController } from '@/controllers/products.controller'
 import {
   productByIdParam,
   productFilterSchema,
   responseProductByIdSchema,
+  responseProductSchema,
   responseProductsWithFiltersSchema,
 } from '@/schemas/products.schema'
 import {
@@ -89,7 +90,54 @@ export const getProductById = createRoute({
   },
 })
 
+export const getRecommendedProducts = createRoute({
+  method: 'get',
+  path: '/recommended/{quantity}',
+  tags: tag,
+  summary: 'Obtener productos recomendados',
+  description: 'Obtiene una lista de productos recomendados',
+  request: {
+    params: z.object({
+      quantity: z
+        .string()
+        .transform(Number)
+        .refine(val => val > 0)
+        .default('10'),
+    }),
+  },
+  responses: {
+    200: {
+      description: 'Productos obtenidos exitosamente',
+      content: {
+        'application/json': {
+          schema: successResponseSchema(z.array(responseProductSchema)),
+        },
+      },
+    },
+    400: {
+      description: 'Bad request',
+      content: {
+        'application/json': {
+          schema: errorResponseSchema,
+        },
+      },
+    },
+    500: {
+      description: 'Internal server error',
+      content: {
+        'application/json': {
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
+})
+
 product.openapi(getProducts, productController.getProducts)
 product.openapi(getProductById, productController.getProductById)
+product.openapi(
+  getRecommendedProducts,
+  productController.getRecommendedProducts,
+)
 
 export default product

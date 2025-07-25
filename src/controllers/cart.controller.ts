@@ -15,7 +15,6 @@ export class CartController {
     try {
       const user = c.get('user') as { userId: number }
       const cartItems = await this.cartService.getCartByUser(user.userId)
-
       return c.json(createResponse.success(cartItems), 200)
     } catch (error) {
       if (error instanceof Error) {

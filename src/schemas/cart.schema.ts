@@ -1,16 +1,18 @@
 import { z } from '@hono/zod-openapi'
+import { responseProductSchema } from './products.schema'
 
-export const cartItem = z.object({
-  productoId: z
+export const CartItem = z.object({
+  producto: responseProductSchema,
+  usuarioId: z
     .number()
-    .openapi({ example: 1, description: 'Id del producto' }),
-  usuarioId: z.number().openapi({ example: 1, description: 'Id del usuario' }),
+    .nullable()
+    .openapi({ example: 1, description: 'Id del usuario' }),
   cantidad: z
     .number()
     .openapi({ example: 1, description: 'Cantidad del producto' }),
 })
 
-export type cartItem = z.infer<typeof cartItem>
+export type CartItem = z.infer<typeof CartItem>
 
 export const addCartItemParam = z.object({
   idProducto: z

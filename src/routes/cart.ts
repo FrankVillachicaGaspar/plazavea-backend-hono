@@ -1,7 +1,7 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import { CartController } from '@/controllers/cart.controller'
 import { authenticateJWT } from '@/middleware/auth'
-import { addCartItemParam, cartItem } from '@/schemas/cart.schema'
+import { addCartItemParam, CartItem } from '@/schemas/cart.schema'
 import {
   errorResponseSchema,
   successMessageResponseSchema,
@@ -29,7 +29,7 @@ export const getCartByUserId = createRoute({
       description: 'Productos obtenidos exitosamente',
       content: {
         'application/json': {
-          schema: successResponseSchema(z.array(cartItem)),
+          schema: successResponseSchema(z.array(CartItem)),
         },
       },
     },

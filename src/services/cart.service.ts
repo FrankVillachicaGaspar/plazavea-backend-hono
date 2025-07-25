@@ -1,12 +1,25 @@
-import { and, eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import { db } from '@/config/database'
-import { carrito } from '@/db/schema'
+import { carrito, productos } from '@/db/schema'
 
 export class CartService {
   async getCartByUser(id: number) {
-    const cartItemList = await db.query.carrito.findMany({
-      where: (table, { eq }) => eq(table.usuarioId, id),
-    })
+    const cartItemList = await db
+      .select({
+        producto: {
+          id: productos.id,
+          nombre: productos.nombre,
+          descripcion: productos.descripcion ?? '',
+          precio: productos.precio,
+          stock: productos.stock,
+          urlImagen: sql<string>`(select url from imagenes as i where i.producto_id = ${productos.id} limit 1)`,
+        },
+        usuarioId: carrito.usuarioId,
+        cantidad: carrito.cantidad,
+      })
+      .from(carrito)
+      .innerJoin(productos, eq(carrito.productoId, productos.id))
+      .where(eq(carrito.usuarioId, id))
     return cartItemList
   }
 

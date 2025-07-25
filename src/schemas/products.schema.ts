@@ -68,7 +68,7 @@ export const responseProductSchema = z
     nombre: z
       .string()
       .openapi({ description: 'Nombre del producto', example: 'Producto 1' }),
-    descripcion: z.string().openapi({
+    descripcion: z.string().nullable().openapi({
       description: 'Descripción del producto',
       example: 'Descripción del producto 1',
     }),

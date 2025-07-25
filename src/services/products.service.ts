@@ -1,6 +1,11 @@
 import { and, asc, eq, gt, like, lte, sql } from 'drizzle-orm'
 import { db } from '@/config/database'
-import { imagenes, productos } from '@/db/schema'
+import {
+  carrito,
+  imagenes,
+  productos,
+  productosRecomendados,
+} from '@/db/schema'
 import type {
   ProductByIdResponse,
   ProductFilterDto,
@@ -61,11 +66,19 @@ export class ProductService {
         nombre: productos.nombre,
         descripcion: productos.descripcion,
         precio: productos.precio,
-        urlImagen: sql<string>`(select url from imagenes as i where i.producto_id = ${productos.id} limit 1)`,
+        urlImagen: sql<string>`MIN(${imagenes.url})`, // Toma la primera imagen
         stock: productos.stock,
       })
       .from(productos)
+      .leftJoin(imagenes, eq(productos.id, imagenes.productoId))
       .where(and(...whereClause))
+      .groupBy(
+        productos.id,
+        productos.nombre,
+        productos.descripcion,
+        productos.precio,
+        productos.stock,
+      )
       .orderBy(orderClause, asc(productos.id))
       .limit(filters.limit)
       .offset(offset)
@@ -77,5 +90,23 @@ export class ProductService {
       productos: productList,
       total,
     }
+  }
+
+  async getRecommendedProducts(quantity: number) {
+    const productList = await db
+      .select({
+        id: productos.id,
+        nombre: productos.nombre,
+        descripcion: productos.descripcion,
+        precio: productos.precio,
+        urlImagen: sql<string>`(select url from imagenes as i where i.producto_id = ${productos.id} limit 1)`,
+        stock: productos.stock,
+      })
+      .from(productosRecomendados)
+      .innerJoin(productos, eq(productosRecomendados.productoId, productos.id))
+      .orderBy(sql`RANDOM()`)
+      .limit(quantity)
+
+    return productList
   }
 }
