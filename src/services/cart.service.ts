@@ -84,4 +84,23 @@ export class CartService {
   async count(idUsuario: number) {
     return await db.$count(carrito, eq(carrito.usuarioId, idUsuario))
   }
+
+  async cartResume(idUsuario: number) {
+    const cartResume = await db
+      .select({
+        subTotal: sql<number>`sum(${productos.precio} * ${carrito.cantidad})`,
+        envio: sql<number>`case when sum(${productos.precio} * ${carrito.cantidad}) > 0 then 15 else 0 end`,
+        total: sql<number>`sum(${productos.precio} * ${carrito.cantidad}) + case when sum(${productos.precio} * ${carrito.cantidad}) > 0 then 15 else 0 end`,
+      })
+      .from(carrito)
+      .innerJoin(productos, eq(carrito.productoId, productos.id))
+      .where(eq(carrito.usuarioId, idUsuario))
+      .groupBy(carrito.usuarioId)
+      .get()
+    return cartResume
+  }
+
+  async clearCart(idUsuario: number) {
+    await db.delete(carrito).where(eq(carrito.usuarioId, idUsuario))
+  }
 }

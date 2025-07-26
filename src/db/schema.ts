@@ -129,12 +129,38 @@ export type Carrito = typeof carrito.$inferSelect
 export const pagos = sqliteTable('pagos', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   usuarioId: integer('usuario_id').references(() => usuarios.id),
+  // Información de contacto
+  nombre: text('nombre').notNull(),
+  apellido: text('apellido').notNull(),
+  email: text('email').notNull(),
+  // Información de pago
   total: real('total').notNull(),
+  subtotal: real('subtotal').notNull(),
+  envio: real('envio').default(0),
   fecha: text('fecha').default('CURRENT_TIMESTAMP'),
-  metodo: text('metodo').notNull(), // 'visa', 'mastercard', 'stripe'
+  metodo: text('metodo').notNull(), // 'card', 'paypal', 'transfer'
+  // Datos de tarjeta (solo si método es 'card')
+  numeroTarjeta: text('numero_tarjeta', { length: 19 }), // formato: 1234 5678 9012 3456
+  fechaVencimiento: text('fecha_vencimiento', { length: 5 }), // formato: MM/YY
+  cvv: text('cvv', { length: 4 }), // encriptado o tokenizado
+  nombreTarjeta: text('nombre_tarjeta'),
   ultima4: text('ultima4', { length: 4 }),
-  estado: text('estado').default('pendiente'), // 'pendiente', 'aprobado', 'fallido'
-  referencia: text('referencia'), // opcional: ID externo de transacción
+  // Dirección de facturación
+  direccion: text('direccion').notNull(),
+  ciudad: text('ciudad').notNull(),
+  codigoPostal: text('codigo_postal').notNull(),
+  pais: text('pais').notNull(),
+  // Estado y seguimiento
+  estado: text('estado').default('pendiente'), // 'pendiente', 'procesando', 'aprobado', 'fallido', 'cancelado'
+  referencia: text('referencia'), // ID externo de transacción
+  // Términos y condiciones
+  terminosAceptados: integer('terminos_aceptados', { mode: 'boolean' }).default(
+    false,
+  ),
+  // Metadatos
+  ip: text('ip'), // IP del usuario al momento del pago
+  userAgent: text('user_agent'), // Navegador del usuario
+  fechaActualizacion: text('fecha_actualizacion').default('CURRENT_TIMESTAMP'),
 })
 
 export type PagoInsert = typeof pagos.$inferInsert

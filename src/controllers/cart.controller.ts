@@ -1,8 +1,10 @@
 import type { RouteHandler } from '@hono/zod-openapi'
 import type {
   addCartItem,
+  clearCart,
   getCartByUserId,
   getCount,
+  getResume,
   removeCartItem,
 } from '@/routes/cart'
 import { CartService } from '@/services/cart.service'
@@ -83,6 +85,35 @@ export class CartController {
       const user = c.get('user') as { userId: number }
       const count = await this.cartService.count(user.userId)
       return c.json(createResponse.success(count), 200)
+    } catch (error) {
+      if (error instanceof Error) {
+        return c.json(createResponse.error(error.message), 400)
+      }
+      return c.json(createResponse.error('Something went wrong'), 500)
+    }
+  }
+
+  getResume: RouteHandler<typeof getResume> = async c => {
+    try {
+      const user = c.get('user') as { userId: number }
+      const resume = await this.cartService.cartResume(user.userId)
+      return c.json(createResponse.success(resume), 200)
+    } catch (error) {
+      if (error instanceof Error) {
+        return c.json(createResponse.error(error.message), 400)
+      }
+      return c.json(createResponse.error('Something went wrong'), 500)
+    }
+  }
+
+  clearCart: RouteHandler<typeof clearCart> = async c => {
+    try {
+      const user = c.get('user') as { userId: number }
+      await this.cartService.clearCart(user.userId)
+      return c.json(
+        createResponse.successMessage('Carrito limpiado exitosamente'),
+        200,
+      )
     } catch (error) {
       if (error instanceof Error) {
         return c.json(createResponse.error(error.message), 400)

@@ -225,10 +225,98 @@ export const getCount = createRoute({
   },
 })
 
+export const getResume = createRoute({
+  method: 'get',
+  path: '/resume',
+  tags: tag,
+  summary: 'Obtener resumen del carrito',
+  description: 'Obtiene el resumen del carrito',
+  middleware: [authenticateJWT] as const,
+  security: [
+    {
+      Bearer: [],
+    },
+  ],
+  responses: {
+    200: {
+      description: 'Resumen del carrito obtenido exitosamente',
+      content: {
+        'application/json': {
+          schema: successResponseSchema(
+            z.object({
+              subTotal: z.number(),
+              envio: z.number(),
+              total: z.number(),
+            }),
+          ),
+        },
+      },
+    },
+    400: {
+      description: 'Bad request',
+      content: {
+        'application/json': {
+          schema: errorResponseSchema,
+        },
+      },
+    },
+    500: {
+      description: 'Internal server error',
+      content: {
+        'application/json': {
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
+})
+
+export const clearCart = createRoute({
+  method: 'delete',
+  path: '/clear',
+  tags: tag,
+  summary: 'Limpiar carrito',
+  description: 'Limpia el carrito',
+  middleware: [authenticateJWT] as const,
+  security: [
+    {
+      Bearer: [],
+    },
+  ],
+  responses: {
+    200: {
+      description: 'Carrito limpiado exitosamente',
+      content: {
+        'application/json': {
+          schema: successMessageResponseSchema,
+        },
+      },
+    },
+    400: {
+      description: 'Bad request',
+      content: {
+        'application/json': {
+          schema: errorResponseSchema,
+        },
+      },
+    },
+    500: {
+      description: 'Internal server error',
+      content: {
+        'application/json': {
+          schema: errorResponseSchema,
+        },
+      },
+    },
+  },
+})
+
 carts.openapi(getCartByUserId, cartController.getCartByUserId)
 carts.openapi(addCartItem, cartController.addCartItem)
 carts.openapi(decreaseCartItem, cartController.decreaseCartItem)
 carts.openapi(removeCartItem, cartController.removeCartItem)
 carts.openapi(getCount, cartController.getCount)
+carts.openapi(getResume, cartController.getResume)
+carts.openapi(clearCart, cartController.clearCart)
 
 export default carts

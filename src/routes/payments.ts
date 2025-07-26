@@ -1,5 +1,5 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
-import { PaymentBodySchema } from '@/schemas/payments.sechema'
+import { CreatePaymentSchema } from '@/schemas/payments.sechema'
 import {
   errorResponseSchema,
   successMessageResponseSchema,
@@ -23,7 +23,7 @@ export const createPayment = createRoute({
     body: {
       content: {
         'application/json': {
-          schema: PaymentBodySchema,
+          schema: CreatePaymentSchema,
         },
       },
     },

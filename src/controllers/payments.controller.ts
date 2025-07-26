@@ -8,9 +8,9 @@ export class PaymentController {
 
   createPayment: RouteHandler<typeof createPayment> = async c => {
     try {
-      const { detail, payment } = c.req.valid('json')
-      const { userId } = c.get('user') as { userId: number }
-      await this.paymentService.createPayment(payment, detail, userId)
+      const payment = c.req.valid('json')
+      const user = c.get('user') as { userId: number }
+      await this.paymentService.createPayment(payment, user.userId)
       return c.json(createResponse.successMessage('Pago creado'), 201)
     } catch (error) {
       if (error instanceof Error)
@@ -24,8 +24,10 @@ export class PaymentController {
 
   getPaymentByUserId: RouteHandler<typeof getPaymentsByUserId> = async c => {
     try {
-      const { userId } = c.get('user') as { userId: number }
-      const payments = await this.paymentService.getPaymentsByUserId(userId)
+      const user = c.get('user') as { userId: number }
+      const payments = await this.paymentService.getPaymentsByUserId(
+        user.userId,
+      )
       if (payments.length === 0)
         return c.json(createResponse.error('Pago no encontrado'), 404)
       return c.json(createResponse.success(payments), 200)
